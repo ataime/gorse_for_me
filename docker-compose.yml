@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  gorse:
+    image: gorse_in_one
+    container_name: gorse
+    ports:
+      - "8086:8086"
+      - "8088:8088"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - GORSE_MASTER_PORT=8086
+      - GORSE_MASTER_HTTP_PORT=8088
+      - GORSE_CACHE_STORE=redis://redis:6379/0
+      - GORSE_DATA_STORE=clickhouse://clickhouse:8123/default
+    depends_on:
+      - redis
+      - clickhouse
+
+  redis:
+    image: redis:6.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  clickhouse:
+    image: yandex/clickhouse-server:21.3
+    container_name: clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+
