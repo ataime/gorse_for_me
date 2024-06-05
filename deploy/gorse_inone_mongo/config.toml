@@ -1,0 +1,158 @@
+[database]
+
+# 缓存数据库设置为 Redis
+cache_store = "redis://localhost:6379/0"
+
+# 使用 ClickHouse 作为持久化数据存储
+# data_store = "clickhouse://username:password@your-clickhouse-host:8123/your_database"
+
+# 表名前缀
+table_prefix = ""
+cache_table_prefix = "gaozo_cache_"
+data_table_prefix = ""
+
+[master]
+
+# 设置 gRPC 和 HTTP 服务的端口和主机
+port = 8086
+host = "0.0.0.0"
+http_port = 8088
+http_host = "0.0.0.0"
+
+# 配置允许的 CORS 域和方法
+http_cors_domains = [".*"]
+http_cors_methods = ["GET", "POST", "PUT", "DELETE"]
+
+# 增加工作线程数量以处理更多并发任务
+n_jobs = 4
+
+# 超时时间设置
+meta_timeout = "30s"
+
+# 配置仪表盘的用户名和密码
+# dashboard_user_name = "admin"
+# dashboard_password = "secure_password"
+
+# 管理 API 的密钥
+admin_api_key = "your_admin_api_key"
+
+[server]
+
+# 默认返回的项目数量
+default_n = 20
+
+# RESTful API 的密钥
+# api_key = "your_api_key"
+
+# 时钟误差
+clock_error = "5s"
+
+# 自动插入用户和项目
+auto_insert_user = true
+auto_insert_item = true
+
+# 服务器端缓存过期时间
+cache_expire = "30s"
+
+[recommend]
+
+# 推荐缓存大小和过期时间
+cache_size = 5000     # 增加缓存大小
+cache_expire = "168h" # 延长缓存过期时间
+fit_jobs = 4          # 增加并行任务数量，根据服务器的 CPU 核数进行调整
+n_neighbors = 20      # 减少近邻数量，可以减小计算量，但可能会影响推荐效果
+
+
+[recommend.data_source]
+
+# 积极反馈和阅读事件的类型
+positive_feedback_types = ["star", "like", "share", "wish_list", "cart"]
+read_feedback_types = ["read"]
+
+# 积极反馈和项目的生存时间
+positive_feedback_ttl = 365 # 365 天
+item_ttl = 365              # 365 天
+
+[recommend.popular]
+
+# 热门项目的时间窗口
+popular_window = "720h"
+
+[recommend.user_neighbors]
+
+# 用户邻居类型
+neighbor_type = "auto"
+
+# 启用近似用户邻居搜索
+enable_index = true
+index_recall = 0.9
+index_fit_epoch = 5
+
+[recommend.item_neighbors]
+
+# 项目邻居类型
+neighbor_type = "auto"
+
+# 启用近似项目邻居搜索
+enable_index = true
+index_recall = 0.9
+index_fit_epoch = 5
+
+[recommend.collaborative]
+# 启用近似协同过滤推荐
+enable_index = true
+index_recall = 0.9
+index_fit_epoch = 5
+
+# 模型拟合和搜索周期
+model_fit_period = "30m"
+model_search_period = "180m"
+
+# 模型搜索的 epoch 和试验次数
+model_search_epoch = 150
+model_search_trials = 20
+
+# 启用模型大小搜索
+enable_model_size_search = true
+
+[recommend.replacement]
+
+# 启用替换推荐
+enable_replacement = true
+positive_replacement_decay = 0.7
+read_replacement_decay = 0.5
+
+[recommend.offline]
+# 离线推荐的检查和刷新周期
+check_recommend_period = "30m"   # 每 30 分钟检查一次推荐
+refresh_recommend_period = "12h" # 每 12 小时刷新一次推荐
+
+# 启用离线推荐的各类推荐
+enable_latest_recommend = true
+enable_popular_recommend = true
+enable_user_based_recommend = true
+enable_item_based_recommend = true
+enable_collaborative_recommend = true
+enable_click_through_prediction = true
+
+# 探索推荐的方法
+explore_recommend = { popular = 0.2, latest = 0.3 }
+
+[recommend.online]
+
+# 在线推荐的回退方法
+fallback_recommend = ["item_based", "popular"]
+
+# 回退项目推荐使用的反馈数量
+num_feedback_fallback_item_based = 20
+
+[tracing]
+
+# 启用 REST API 的追踪
+enable_tracing = true
+
+# 追踪导出器和采样器设置
+exporter = "jaeger"
+collector_endpoint = "http://localhost:14268/api/traces"
+sampler = "ratio"
+ratio = 0.5

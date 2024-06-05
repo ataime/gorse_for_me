@@ -1,0 +1,6 @@
+[server]
+http_port = 8088
+
+[database]
+cache_store = "redis://redis:6379"
+data_store = "mysql://gorse:gorse_pass@tcp(mysql:3306)/gorse"
