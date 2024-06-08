@@ -60,7 +60,11 @@ func ResponseLogger(resp *restful.Response) *zap.Logger {
 
 func CloseLogger() {
 	cfg := zap.NewProductionConfig()
+	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	cfg.EncoderConfig.EncodeCaller = zapcore.ShortCallerEncoder // 配置调用者编码器以包含行号
+
 	cfg.Level = zap.NewAtomicLevelAt(zap.FatalLevel)
+
 	var err error
 	logger, err = cfg.Build()
 	if err != nil {

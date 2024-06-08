@@ -134,8 +134,8 @@ func batchInsert(endpoint string, data interface{}) {
 }
 
 func main() {
-	nUsers := 200
-	nItems := 500
+	nUsers := 2000
+	nItems := 5000
 
 	// 生成用户数据并插入
 	users := GenerateUsers(nUsers)
